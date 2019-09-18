@@ -12,8 +12,10 @@ set hlsearch
 set statusline+=%F
 set laststatus=2
 set wrapmargin=2
+set cursorline
 set incsearch
 set whichwrap+=<,>,h,l
+set mouse=a
 filetype off                  " required
 
 " Press Space to turn off highlighting and clear any message already displayed.
@@ -24,7 +26,7 @@ nnoremap <silent> <Space> :nohlsearch<Bar>:echo<CR>
 " noremap <leader>/ :Commentary<cr>
 " Commenting blocks of code.
 autocmd FileType c,cpp,java,scala let b:comment_leader = '// '
-autocmd FileType sh,ruby,python   let b:comment_leader = '# '
+autocmd FileType sh,ruby,python,zsh   let b:comment_leader = '# '
 autocmd FileType conf,fstab       let b:comment_leader = '# '
 autocmd FileType tex              let b:comment_leader = '% '
 autocmd FileType mail             let b:comment_leader = '> '
@@ -47,15 +49,14 @@ Plugin 'VundleVim/Vundle.vim'
 "start of my plugin
 
 Bundle 'Valloric/YouCompleteMe'
-Plugin 'vim-latex/vim-latex' 
 Plugin 'NLKNguyen/papercolor-theme'
 Plugin 'tpope/vim-commentary'
 Plugin 'scrooloose/nerdtree'
 Plugin 'Chiel92/vim-autoformat'
 Plugin 'godlygeek/tabular'
-Plugin 'plasticboy/vim-markdown'
 Plugin 'tyrannicaltoucan/vim-quantum'
 Plugin 'vim-airline/vim-airline'
+Plugin 'xuhdev/vim-latex-live-preview'
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
 filetype plugin indent on    " required
@@ -96,7 +97,7 @@ inoremap <expr> <PageUp>   pumvisible() ? "\<PageUp>\<C-p>\<C-n>" : "\<PageUp>"
 let g:ycm_confirm_extra_conf=0 "关闭加载.ycm_extra_conf.py提示
 
 let g:ycm_collect_identifiers_from_tags_files=1	" 开启 YCM 基于标签引擎
-let g:ycm_min_num_of_chars_for_completion=2	" 从第2个键入字符就开始罗列匹配项
+let g:ycm_min_num_of_chars_for_completion=1	" 从第2个键入字符就开始罗列匹配项
 let g:ycm_cache_omnifunc=0	" 禁止缓存匹配项,每次都重新生成匹配项
 let g:ycm_seed_identifiers_with_syntax=1	" 语法关键字补全
 nnoremap <F5> :YcmForceCompileAndDiagnostics<CR>	"force recomile with syntastic
@@ -111,3 +112,19 @@ let g:ycm_complete_in_strings = 1
 let g:ycm_collect_identifiers_from_comments_and_strings = 0
 nnoremap ,j :YcmCompleter FixIt 
 nnoremap ,jd :YcmCompleter GoToDefinitionElseDeclaration<CR>
+let g:ycm_semantic_triggers = {
+	\   'c': ['->','.', 're!\w{2}' ],
+	\   'cpp': ['->','.','::',':', 're!\w{2}' ],
+	\   'python': ['.', 're!\w{2}' ]
+	\ }
+"latex preview setup
+let g:livepreview_previewer = 'open -a Preview'
+"How to use markdown view:
+"zr: reduces fold level throughout the buffer
+" zR: opens all folds
+" zm: increases fold level throughout the buffer
+" zM: folds everything all the way
+" za: open a fold your cursor is on
+" zA: open a fold your cursor is on recursively
+" zc: close a fold your cursor is on
+" zC: close a fold your cursor is on recursively
