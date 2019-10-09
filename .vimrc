@@ -16,8 +16,8 @@ set cursorline
 set incsearch
 set whichwrap+=<,>,h,l
 set mouse=a
+set clipboard=unnamed
 filetype off                  " required
-
 " Press Space to turn off highlighting and clear any message already displayed.
 nnoremap <silent> <Space> :nohlsearch<Bar>:echo<CR>
 
@@ -48,15 +48,21 @@ Plugin 'VundleVim/Vundle.vim'
 
 "start of my plugin
 
-Bundle 'Valloric/YouCompleteMe'
+Plugin 'Valloric/YouCompleteMe'
 Plugin 'NLKNguyen/papercolor-theme'
 Plugin 'tpope/vim-commentary'
+Plugin 'tpope/vim-dadbod'
+Plugin 'xuhdev/vim-latex-live-preview'
 Plugin 'scrooloose/nerdtree'
 Plugin 'Chiel92/vim-autoformat'
 Plugin 'godlygeek/tabular'
 Plugin 'tyrannicaltoucan/vim-quantum'
 Plugin 'vim-airline/vim-airline'
-Plugin 'xuhdev/vim-latex-live-preview'
+Plugin 'suan/vim-instant-markdown', {'rtp': 'after'}
+Plugin 'altercation/vim-colors-solarized'
+Plugin 'lifepillar/pgsql.vim'
+Plugin 'ayu-theme/ayu-vim'
+Plugin 'Yggdroot/indentLine'
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
 filetype plugin indent on    " required
@@ -73,11 +79,18 @@ filetype plugin indent on    " required
 " Put your non-Plugin stuff after this line
 
 "color scheme
-set background=dark
 set termguicolors
-let g:quantum_black=1
-let g:airline_theme='quantum'
-colorscheme quantum
+let ayucolor="mirage"
+colorscheme ayu
+
+" IndentLine {{
+let g:indentLine_char = '|'
+let g:indentLine_first_char = '|'
+let g:indentLine_showFirstIndentLevel = 1
+let g:indentLine_setColors = 0
+" }}
+
+
 
 " 自动补全配置
 set completeopt=longest,menu	"让Vim的补全菜单行为与一般IDE一致(参考VimTip1228)
@@ -128,3 +141,52 @@ let g:livepreview_previewer = 'open -a Preview'
 " zA: open a fold your cursor is on recursively
 " zc: close a fold your cursor is on
 " zC: close a fold your cursor is on recursively
+"括号的自动补全
+inoremap ( ()<LEFT>
+inoremap [ []<LEFT>
+inoremap { {}<LEFT>
+inoremap " ""<LEFT>
+inoremap ' ''<LEFT>
+inoremap < <><LEFT>
+
+function! RemovePairs()
+    let s:line = getline(".")
+    let s:previous_char = s:line[col(".")-1]
+
+    if index(["(","[","{"],s:previous_char) != -1
+        let l:original_pos = getpos(".")
+        execute "normal %"
+        let l:new_pos = getpos(".")
+        " only right (
+        if l:original_pos == l:new_pos
+            execute "normal! a\<BS>"
+            return
+        end
+
+        let l:line2 = getline(".")
+        if len(l:line2) == col(".")
+            execute "normal! v%xa"
+        else
+            execute "normal! v%xi"
+        end
+    else
+        execute "normal! a\<BS>"
+    end
+endfunction
+
+function! RemoveNextDoubleChar(char)
+    let l:line = getline(".")
+    let l:next_char = l:line[col(".")]
+
+    if a:char == l:next_char
+        execute "normal! l"
+    else
+        execute "normal! i" . a:char . ""
+    end
+endfunction
+
+inoremap <BS> <ESC>:call RemovePairs()<CR>a
+inoremap ) <ESC>:call RemoveNextDoubleChar(')')<CR>a
+inoremap ] <ESC>:call RemoveNextDoubleChar(']')<CR>a
+inoremap } <ESC>:call RemoveNextDoubleChar('}')<CR>a
+inoremap > <ESC>:call RemoveNextDoubleChar('>')<CR>a 
