@@ -13,6 +13,7 @@ set statusline+=%F
 set laststatus=2
 set wrapmargin=2
 set cursorline
+set wrap
 set incsearch
 set whichwrap+=<,>,h,l
 set mouse=a
@@ -84,8 +85,8 @@ let ayucolor="mirage"
 colorscheme ayu
 
 " IndentLine {{
-let g:indentLine_char = '|'
-let g:indentLine_first_char = '|'
+let g:indentLine_char = '⎸'
+let g:indentLine_first_char = '⎸'
 let g:indentLine_showFirstIndentLevel = 1
 let g:indentLine_setColors = 0
 " }}
@@ -141,52 +142,11 @@ let g:livepreview_previewer = 'open -a Preview'
 " zA: open a fold your cursor is on recursively
 " zc: close a fold your cursor is on
 " zC: close a fold your cursor is on recursively
-"括号的自动补全
-inoremap ( ()<LEFT>
-inoremap [ []<LEFT>
-inoremap { {}<LEFT>
-inoremap " ""<LEFT>
-inoremap ' ''<LEFT>
-inoremap < <><LEFT>
 
-function! RemovePairs()
-    let s:line = getline(".")
-    let s:previous_char = s:line[col(".")-1]
 
-    if index(["(","[","{"],s:previous_char) != -1
-        let l:original_pos = getpos(".")
-        execute "normal %"
-        let l:new_pos = getpos(".")
-        " only right (
-        if l:original_pos == l:new_pos
-            execute "normal! a\<BS>"
-            return
-        end
 
-        let l:line2 = getline(".")
-        if len(l:line2) == col(".")
-            execute "normal! v%xa"
-        else
-            execute "normal! v%xi"
-        end
-    else
-        execute "normal! a\<BS>"
-    end
-endfunction
 
-function! RemoveNextDoubleChar(char)
-    let l:line = getline(".")
-    let l:next_char = l:line[col(".")]
+"sql autoformat setting
+let g:formatdef_sqlformat = '"sqlformat --keywords upper -"'
+let g:formatters_sql = ['sqlformat']
 
-    if a:char == l:next_char
-        execute "normal! l"
-    else
-        execute "normal! i" . a:char . ""
-    end
-endfunction
-
-inoremap <BS> <ESC>:call RemovePairs()<CR>a
-inoremap ) <ESC>:call RemoveNextDoubleChar(')')<CR>a
-inoremap ] <ESC>:call RemoveNextDoubleChar(']')<CR>a
-inoremap } <ESC>:call RemoveNextDoubleChar('}')<CR>a
-inoremap > <ESC>:call RemoveNextDoubleChar('>')<CR>a 
