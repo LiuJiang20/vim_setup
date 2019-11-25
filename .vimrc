@@ -18,6 +18,7 @@ set incsearch
 set whichwrap+=<,>,h,l
 set mouse=a
 set clipboard=unnamed
+set background=dark
 filetype off                  " required
 " Press Space to turn off highlighting and clear any message already displayed.
 nnoremap <silent> <Space> :nohlsearch<Bar>:echo<CR>
@@ -63,6 +64,7 @@ Plugin 'suan/vim-instant-markdown', {'rtp': 'after'}
 Plugin 'altercation/vim-colors-solarized'
 Plugin 'lifepillar/pgsql.vim'
 Plugin 'ayu-theme/ayu-vim'
+Plugin 'jonathanfilip/vim-lucius'
 Plugin 'Yggdroot/indentLine'
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
@@ -82,7 +84,7 @@ filetype plugin indent on    " required
 "color scheme
 set termguicolors
 let ayucolor="mirage"
-colorscheme ayu
+colorscheme lucius
 
 " IndentLine {{
 let g:indentLine_char = '⎸'
